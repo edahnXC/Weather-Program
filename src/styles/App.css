@@ -1,4 +1,3 @@
-/* Base Styles */
 :root {
     --text-color: #333;
     --card-bg: rgba(255, 255, 255, 0.9);
@@ -17,6 +16,8 @@
     min-height: 100vh;
     transition: var(--transition);
     line-height: 1.6;
+    background-attachment: fixed;
+    background-size: cover;
   }
   
   .app-container {
@@ -30,15 +31,13 @@
     margin: 0 auto;
   }
   
-  /* Header Styles */
   .header-container {
-    width:100%;
-    max-width:1200px;
-    margin:0 auto 2 rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
     flex-wrap: wrap;
     gap: 1.5rem;
   }
@@ -57,18 +56,16 @@
     gap: 1.5rem;
   }
   
-  /* Main Content */
   .weather-main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    width:100%;
-    max-width:1200px;
-    margin:0 auto;
-    padding:0 1 rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
   }
   
-  /* Loading and Error States */
   .loading-container,
   .error-container {
     display: flex;
@@ -114,7 +111,6 @@
     border-radius: 8px;
   }
   
-  /* Footer */
   .app-footer {
     margin-top: 2rem;
     text-align: center;
@@ -123,10 +119,7 @@
     opacity: 0.8;
   }
   
-  /* Responsive Adjustments */
-
- /* Update the mobile media query in App.css */
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
     .app-container {
       padding: 1rem;
     }
@@ -146,99 +139,6 @@
     .app-title {
       font-size: 1.8rem;
       text-align: center;
-    }
-  
-    .weather-card {
-      width: 100%;
-      padding: 1.25rem;
-      margin: 0;
-      border-radius: 12px;
-    }
-  
-    .weather-header {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-  
-    .weather-header h2 {
-      font-size: 1.4rem;
-      margin-bottom: 0.25rem;
-    }
-  
-    .current-date {
-      font-size: 0.9rem;
-    }
-  
-    .weather-icon {
-      width: 70px;
-      height: 70px;
-      margin-top: 0.5rem;
-    }
-  
-    .temperature-value {
-      font-size: 3rem;
-    }
-  
-    .temperature-unit {
-      font-size: 1.25rem;
-    }
-  
-    .weather-description {
-      font-size: 1.1rem;
-      margin: 0.25rem 0;
-    }
-  
-    .temp-range {
-      font-size: 0.9rem;
-      gap: 0.75rem;
-    }
-  
-    .weather-details {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-    }
-  
-    .detail-item {
-      padding: 0.75rem;
-      font-size: 0.85rem;
-    }
-  
-    .sun-times {
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 0.75rem;
-    }
-  
-    .sun-time {
-      flex-direction: row;
-      justify-content: space-between;
-      width: 100%;
-    }
-  
-    .search-container {
-      width: 100%;
-    }
-  
-    .search-input {
-      padding: 0.6rem 1rem;
-      font-size: 0.9rem;
-    }
-  
-    .search-button {
-      padding: 0.4rem;
-    }
-  
-    .unit-toggle {
-      margin-top: 0;
-      justify-content: center;
-    }
-  
-    .unit-button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
     }
   
     .loading-container,

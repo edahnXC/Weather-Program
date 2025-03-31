@@ -14,7 +14,13 @@ function App() {
   
   useEffect(() => {
     fetchWeather(location, unit)
-  }, [])
+  }, []) // Initial fetch
+
+  useEffect(() => {
+    if (location) {
+      fetchWeather(location, unit)
+    }
+  }, [unit]) // Refetch when unit changes
 
   useEffect(() => {
     if (!weatherData) return
@@ -37,10 +43,10 @@ function App() {
     else if (temp < 10) document.body.classList.add('cold')
   }, [weatherData])
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault()
     if (location.trim()) {
-      fetchWeather(location, unit)
+      await fetchWeather(location, unit)
     }
   }
 

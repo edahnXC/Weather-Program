@@ -7,41 +7,54 @@ const WeatherCard = ({ weatherData, unit, error }) => {
     const displayFeelsLike = Math.round(convertTemp(weatherData.main.feels_like));
     const displayHigh = Math.round(convertTemp(weatherData.main.temp_max));
     const displayLow = Math.round(convertTemp(weatherData.main.temp_min));
+    
+    const formatTime = (timestamp, timezone) => {
+      const date = new Date(timestamp * 1000);
+      const utc = date.getTime() + date.getTimezoneOffset() * 60000;
+      const cityTime = new Date(utc + (timezone * 1000));
+      
+      return cityTime.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    };
+    
     const getLocalTime = () => {
-        if (!weatherData || !weatherData.timezone) return '';
-        
-        const now = new Date();
-        const localOffset = now.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
-        const cityOffset = weatherData.timezone * 1000; // Convert seconds to milliseconds
-        const cityTime = new Date(now.getTime() + localOffset + cityOffset);
-        
-        return cityTime.toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        });
-      };
-      return (
-        <div className="weather-card">
-          <div className="weather-header">
-            <div className="location-info">
-              <h2>{weatherData.name}, {weatherData.sys.country}</h2>
-              <p className="current-date">
-                {new Date().toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  month: 'short', 
-                  day: 'numeric' 
-                })}
-                <span className="local-time"> • {getLocalTime()}</span>
-              </p>
-            </div>
-            <img 
-              src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} 
-              alt={weatherData.weather[0].description}
-              className="weather-icon"
-            />
+      if (!weatherData || !weatherData.timezone) return '';
+      
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const cityTime = new Date(utc + (weatherData.timezone * 1000));
+      
+      return cityTime.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    };
+
+    return (
+      <div className="weather-card">
+        <div className="weather-header">
+          <div className="location-info">
+            <h2>{weatherData.name}, {weatherData.sys.country}</h2>
+            <p className="current-date">
+              {new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'short', 
+                day: 'numeric' 
+              })}
+              <span className="local-time"> • {getLocalTime()}</span>
+            </p>
           </div>
-        
+          <img 
+            src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} 
+            alt={weatherData.weather[0].description}
+            className="weather-icon"
+          />
+        </div>
+      
         {error && (
           <div className="error-message">
             <p>{error}</p>
@@ -56,10 +69,12 @@ const WeatherCard = ({ weatherData, unit, error }) => {
           <p className="weather-description">
             {weatherData.weather[0].description}
           </p>
-          <div className="temp-range">
-            <span>H: {displayHigh}°</span>
-            <span>L: {displayLow}°</span>
-          </div>
+          {displayHigh !== displayTemp && displayLow !== displayTemp && (
+            <div className="temp-range">
+              <span>H: {displayHigh}°</span>
+              <span>L: {displayLow}°</span>
+            </div>
+          )}
         </div>
         
         <div className="weather-details">
@@ -89,23 +104,17 @@ const WeatherCard = ({ weatherData, unit, error }) => {
           <div className="sun-time">
             <span>🌅 Sunrise</span>
             <span>
-              {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString([], {
-                hour: '2-digit', 
-                minute:'2-digit'
-              })}
+              {formatTime(weatherData.sys.sunrise, weatherData.timezone)}
             </span>
           </div>
           <div className="sun-time">
             <span>🌇 Sunset</span>
             <span>
-              {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString([], {
-                hour: '2-digit', 
-                minute:'2-digit'
-              })}
+              {formatTime(weatherData.sys.sunset, weatherData.timezone)}
             </span>
           </div>
         </div>
       </div>
     );
-  };
-  export default WeatherCard;
+};
+export default WeatherCard;

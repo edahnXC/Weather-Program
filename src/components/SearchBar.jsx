@@ -9,7 +9,7 @@ const SearchBar = ({ location, setLocation, unit, setUnit, handleSearch }) => {
     setInputValue(location)
   }, [location])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const formattedLocation = inputValue.trim()
     
@@ -25,11 +25,7 @@ const SearchBar = ({ location, setLocation, unit, setUnit, handleSearch }) => {
     
     setError(null)
     setLocation(formattedLocation)
-    handleSearch(e)
-  }
-
-  const toggleUnit = () => {
-    setUnit(unit === 'metric' ? 'imperial' : 'metric')
+    await handleSearch(e)
   }
 
   return (
