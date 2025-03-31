@@ -108,3 +108,4 @@ const WeatherCard = ({ weatherData, unit, error }) => {
       </div>
     );
   };
+  export default WeatherCard;
