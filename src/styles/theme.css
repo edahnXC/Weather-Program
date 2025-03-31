@@ -1,0 +1,67 @@
+/* Base themes */
+body.light {
+    --text-color: #333;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --button-bg: #3a86ff;
+    --detail-bg: rgba(255, 255, 255, 0.15);
+  }
+  
+  body.dark {
+    --text-color: #f0f0f0;
+    --card-bg: rgba(26, 26, 46, 0.9);
+    --button-bg: #8338ec;
+    --detail-bg: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Weather condition themes */
+  body.clear {
+    --weather-theme: #87CEEB;
+    --weather-accent: #1E90FF;
+  }
+  
+  body.clouds {
+    --weather-theme: #b0c4de;
+    --weather-accent: #778899;
+  }
+  
+  body.rain {
+    --weather-theme: #6b9ac4;
+    --weather-accent: #4056a1;
+  }
+  
+  body.thunderstorm {
+    --weather-theme: #4B4453;
+    --weather-accent: #2C2C54;
+  }
+  
+  body.snow {
+    --weather-theme: #E4F1FE;
+    --weather-accent: #ADD8E6;
+  }
+  
+  body.hot {
+    --weather-theme: #FF7F50;
+    --weather-accent: #FF4500;
+  }
+  
+  body.cold {
+    --weather-theme: #ADD8E6;
+    --weather-accent: #4682B4;
+  }
+  
+  /* Time-based adjustments */
+  body.day {
+    background: linear-gradient(135deg, var(--weather-theme), var(--weather-accent));
+  }
+  
+  body.night {
+    background: linear-gradient(135deg, 
+      color-mix(in lab, var(--weather-theme), black 30%), 
+      color-mix(in lab, var(--weather-accent), black 30%));
+  }
+  
+  body {
+    background-attachment: fixed;
+    background-size: cover;
+    transition: background 0.5s ease, color 0.3s ease;
+  }
