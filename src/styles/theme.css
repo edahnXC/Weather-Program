@@ -63,3 +63,22 @@ body.light {
     background-size: cover;
     transition: background 0.5s ease, color 0.3s ease;
   }
+  body.night.hot {
+    --weather-theme: #8b0000; /* Dark red */
+    --weather-accent: #5a0000; /* Deep maroon */
+  }
+  
+  body.night.cold {
+    --weather-theme: #003366; /* Dark blue */
+    --weather-accent: #001a33; /* Navy */
+  }
+  
+  body.night.clear {
+    --weather-theme: #1a1a2e; /* Dark indigo */
+    --weather-accent: #16213e;
+  }
+  
+  body.night.clouds {
+    --weather-theme: #2d3436; /* Dark gray */
+    --weather-accent: #636e72;
+  }

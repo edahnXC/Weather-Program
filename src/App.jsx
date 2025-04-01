@@ -12,29 +12,33 @@ function App() {
   const { weatherData, loading, error, fetchWeather } = useWeather()
   
   useEffect(() => {
-    fetchWeather(location, 'metric')
-  }, []) // Initial fetch
-
-  useEffect(() => {
-    if (!weatherData) return
-    
-    const weatherCondition = weatherData.weather[0].main.toLowerCase()
-    const now = new Date()
-    const hours = now.getHours()
-    const isNightTime = hours < 6 || hours > 18
-    
+    if (!weatherData) return;
+  
+    const weatherCondition = weatherData.weather[0].main.toLowerCase();
+    const now = new Date();
+    const hours = now.getHours();
+    const isNightTime = hours < 6 || hours > 18;
+    const temp = weatherData.main.temp;
+  
+    // Reset all classes
     document.body.classList.remove(
       'day', 'night', 'clear', 'clouds', 'rain', 
       'thunderstorm', 'snow', 'hot', 'cold'
-    )
-    
-    document.body.classList.add(isNightTime ? 'night' : 'day')
-    document.body.classList.add(weatherCondition)
-    
-    const temp = weatherData.main.temp
-    if (temp > 30) document.body.classList.add('hot')
-    else if (temp < 10) document.body.classList.add('cold')
-  }, [weatherData])
+    );
+  
+    // Set day/night first
+    document.body.classList.add(isNightTime ? 'night' : 'day');
+  
+    // Add weather condition (clear, clouds, etc.)
+    document.body.classList.add(weatherCondition);
+  
+    // Add temperature class (hot/cold) ONLY if it's significant
+    if (temp > 30) {
+      document.body.classList.add('hot');
+    } else if (temp < 10) {
+      document.body.classList.add('cold');
+    }
+  }, [weatherData]);
 
   const handleSearch = async (e) => {
     e.preventDefault()

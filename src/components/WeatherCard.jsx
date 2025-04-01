@@ -63,10 +63,6 @@ const WeatherCard = ({ weatherData, error }) => {
           <p className="weather-description">
             {weatherData.weather[0].description}
           </p>
-          <div className="temp-range">
-            <span>H: {Math.round(weatherData.main.temp_max)}°</span>
-            <span>L: {Math.round(weatherData.main.temp_min)}°</span>
-          </div>
         </div>
         
         <div className="weather-details">
