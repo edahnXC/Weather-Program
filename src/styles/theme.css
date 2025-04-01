@@ -1,63 +1,61 @@
-/* Base themes */
+/* Updated theme.css */
 body.light {
-    --text-color: #333;
-    --card-bg: rgba(255, 255, 255, 0.9);
-    --button-bg: #3a86ff;
-    --detail-bg: rgba(255, 255, 255, 0.15);
+    --text-color: #1c1c1e;
+    --card-bg: rgba(255, 255, 255, 0.92);
+    --button-bg: #007aff;
+    --detail-bg: rgba(120, 120, 128, 0.12);
   }
   
   body.dark {
-    --text-color: #f0f0f0;
-    --card-bg: rgba(26, 26, 46, 0.9);
-    --button-bg: #8338ec;
-    --detail-bg: rgba(255, 255, 255, 0.05);
+    --text-color: #f5f5f7;
+    --card-bg: rgba(28, 28, 30, 0.92);
+    --button-bg: #0a84ff;
+    --detail-bg: rgba(120, 120, 128, 0.18);
   }
   
-  /* Weather condition themes */
   body.clear {
-    --weather-theme: #87CEEB;
-    --weather-accent: #1E90FF;
+    --weather-theme: #5ac8fa;
+    --weather-accent: #007aff;
   }
   
   body.clouds {
-    --weather-theme: #b0c4de;
-    --weather-accent: #778899;
+    --weather-theme: #d1d1d6;
+    --weather-accent: #8e8e93;
   }
   
   body.rain {
-    --weather-theme: #6b9ac4;
-    --weather-accent: #4056a1;
+    --weather-theme: #5e9cff;
+    --weather-accent: #0040dd;
   }
   
   body.thunderstorm {
-    --weather-theme: #4B4453;
-    --weather-accent: #2C2C54;
+    --weather-theme: #5856d6;
+    --weather-accent: #3634a3;
   }
   
   body.snow {
-    --weather-theme: #E4F1FE;
-    --weather-accent: #ADD8E6;
+    --weather-theme: #e5f3ff;
+    --weather-accent: #64d2ff;
   }
   
   body.hot {
-    --weather-theme: #FF7F50;
-    --weather-accent: #FF4500;
+    --weather-theme: #ff9500;
+    --weather-accent: #ff2d55;
   }
   
   body.cold {
-    --weather-theme: #ADD8E6;
-    --weather-accent: #4682B4;
+    --weather-theme: #5ac8fa;
+    --weather-accent: #007aff;
   }
   
-  /* Time-based adjustments */
   body.day {
     background: linear-gradient(135deg, var(--weather-theme), var(--weather-accent));
   }
   
   body.night {
     background: linear-gradient(135deg, 
-      color-mix(in lab, var(--weather-theme), black 30%), 
-      color-mix(in lab, var(--weather-accent), black 30%));
+      color-mix(in lab, var(--weather-theme), black 40%), 
+      color-mix(in lab, var(--weather-accent), black 40%));
   }
   
   body {

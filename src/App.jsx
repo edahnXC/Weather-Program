@@ -9,18 +9,11 @@ import useWeather from './hooks/useWeather'
 
 function App() {
   const [location, setLocation] = useState('Bengaluru')
-  const [unit, setUnit] = useState('metric')
   const { weatherData, loading, error, fetchWeather } = useWeather()
   
   useEffect(() => {
-    fetchWeather(location, unit)
+    fetchWeather(location, 'metric')
   }, []) // Initial fetch
-
-  useEffect(() => {
-    if (location) {
-      fetchWeather(location, unit)
-    }
-  }, [unit]) // Refetch when unit changes
 
   useEffect(() => {
     if (!weatherData) return
@@ -46,7 +39,7 @@ function App() {
   const handleSearch = async (e) => {
     e.preventDefault()
     if (location.trim()) {
-      await fetchWeather(location, unit)
+      await fetchWeather(location, 'metric')
     }
   }
 
@@ -55,14 +48,14 @@ function App() {
       <header className="header-container">
         <h1 className="app-title">Weather Forecast</h1>
         <div className="controls-container">
-          <SearchBar 
-            location={location}
-            setLocation={setLocation}
-            unit={unit}
-            setUnit={setUnit}
-            handleSearch={handleSearch}
-          />
-          <ThemeToggle />
+          <div className="search-toggle-container">
+            <SearchBar 
+              location={location}
+              setLocation={setLocation}
+              handleSearch={handleSearch}
+            />
+            <ThemeToggle />
+          </div>
         </div>
       </header>
       
@@ -89,7 +82,6 @@ function App() {
         {weatherData && (
           <WeatherCard 
             weatherData={weatherData} 
-            unit={unit} 
             error={error}
           />
         )}

@@ -1,14 +1,6 @@
-const WeatherCard = ({ weatherData, unit, error }) => {
-    const convertTemp = (temp) => {
-      return unit === 'imperial' ? (temp * 9/5) + 32 : temp;
-    };
-  
-    const displayTemp = Math.round(convertTemp(weatherData.main.temp));
-    const displayFeelsLike = Math.round(convertTemp(weatherData.main.feels_like));
-    const displayHigh = Math.round(convertTemp(weatherData.main.temp_max));
-    const displayLow = Math.round(convertTemp(weatherData.main.temp_min));
-    
+const WeatherCard = ({ weatherData, error }) => {
     const formatTime = (timestamp, timezone) => {
+      if (!timestamp || !timezone) return '';
       const date = new Date(timestamp * 1000);
       const utc = date.getTime() + date.getTimezoneOffset() * 60000;
       const cityTime = new Date(utc + (timezone * 1000));
@@ -33,6 +25,8 @@ const WeatherCard = ({ weatherData, unit, error }) => {
         hour12: true
       });
     };
+
+    if (!weatherData) return null;
 
     return (
       <div className="weather-card">
@@ -63,24 +57,22 @@ const WeatherCard = ({ weatherData, unit, error }) => {
         
         <div className="weather-main">
           <div className="temperature-display">
-            <span className="temperature-value">{displayTemp}</span>
-            <span className="temperature-unit">°{unit === 'metric' ? 'C' : 'F'}</span>
+            <span className="temperature-value">{Math.round(weatherData.main.temp)}</span>
+            <span className="temperature-unit">°C</span>
           </div>
           <p className="weather-description">
             {weatherData.weather[0].description}
           </p>
-          {displayHigh !== displayTemp && displayLow !== displayTemp && (
-            <div className="temp-range">
-              <span>H: {displayHigh}°</span>
-              <span>L: {displayLow}°</span>
-            </div>
-          )}
+          <div className="temp-range">
+            <span>H: {Math.round(weatherData.main.temp_max)}°</span>
+            <span>L: {Math.round(weatherData.main.temp_min)}°</span>
+          </div>
         </div>
         
         <div className="weather-details">
           <div className="detail-item">
             <span>Feels Like</span>
-            <span>{displayFeelsLike}°</span>
+            <span>{Math.round(weatherData.main.feels_like)}°</span>
           </div>
           <div className="detail-item">
             <span>Humidity</span>
@@ -88,11 +80,7 @@ const WeatherCard = ({ weatherData, unit, error }) => {
           </div>
           <div className="detail-item">
             <span>Wind</span>
-            <span>
-              {unit === 'metric' 
-                ? `${weatherData.wind.speed} m/s` 
-                : `${(weatherData.wind.speed * 2.237).toFixed(1)} mph`}
-            </span>
+            <span>{weatherData.wind.speed.toFixed(1)} m/s</span>
           </div>
           <div className="detail-item">
             <span>Pressure</span>
@@ -117,4 +105,5 @@ const WeatherCard = ({ weatherData, unit, error }) => {
       </div>
     );
 };
+
 export default WeatherCard;
