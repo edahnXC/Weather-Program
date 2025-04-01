@@ -1,84 +1,91 @@
-/* Updated theme.css */
+/* Light mode colors */
 body.light {
-    --text-color: #1c1c1e;
+    --text-color: #1a1a1a;
     --card-bg: rgba(255, 255, 255, 0.92);
     --button-bg: #007aff;
     --detail-bg: rgba(120, 120, 128, 0.12);
-  }
-  
-  body.dark {
+    --title-color: #1a1a1a;
+}
+
+/* Dark mode colors */
+body.dark {
     --text-color: #f5f5f7;
     --card-bg: rgba(28, 28, 30, 0.92);
     --button-bg: #0a84ff;
     --detail-bg: rgba(120, 120, 128, 0.18);
-  }
-  
-  body.clear {
+    --title-color: #ffffff;
+}
+
+/* Weather condition themes */
+body.clear {
     --weather-theme: #5ac8fa;
     --weather-accent: #007aff;
-  }
-  
-  body.clouds {
+}
+
+body.clouds {
     --weather-theme: #d1d1d6;
     --weather-accent: #8e8e93;
-  }
-  
-  body.rain {
+}
+
+body.rain {
     --weather-theme: #5e9cff;
     --weather-accent: #0040dd;
-  }
-  
-  body.thunderstorm {
+}
+
+body.thunderstorm {
     --weather-theme: #5856d6;
     --weather-accent: #3634a3;
-  }
-  
-  body.snow {
+}
+
+body.snow {
     --weather-theme: #e5f3ff;
     --weather-accent: #64d2ff;
-  }
-  
-  body.hot {
+}
+
+body.hot {
     --weather-theme: #ff9500;
     --weather-accent: #ff2d55;
-  }
-  
-  body.cold {
+}
+
+body.cold {
     --weather-theme: #5ac8fa;
     --weather-accent: #007aff;
-  }
-  
-  body.day {
+}
+
+/* Day/Night themes */
+body.day {
     background: linear-gradient(135deg, var(--weather-theme), var(--weather-accent));
-  }
-  
-  body.night {
+}
+
+body.night {
     background: linear-gradient(135deg, 
-      color-mix(in lab, var(--weather-theme), black 40%), 
-      color-mix(in lab, var(--weather-accent), black 40%));
-  }
-  
-  body {
+        color-mix(in lab, var(--weather-theme), black 40%), 
+        color-mix(in lab, var(--weather-accent), black 40%));
+}
+
+/* Night variants for weather conditions */
+body.night.hot {
+    --weather-theme: #8b0000;
+    --weather-accent: #5a0000;
+}
+
+body.night.cold {
+    --weather-theme: #003366;
+    --weather-accent: #001a33;
+}
+
+body.night.clear {
+    --weather-theme: #1a1a2e;
+    --weather-accent: #16213e;
+}
+
+body.night.clouds {
+    --weather-theme: #2d3436;
+    --weather-accent: #636e72;
+}
+
+body {
     background-attachment: fixed;
     background-size: cover;
     transition: background 0.5s ease, color 0.3s ease;
-  }
-  body.night.hot {
-    --weather-theme: #8b0000; /* Dark red */
-    --weather-accent: #5a0000; /* Deep maroon */
-  }
-  
-  body.night.cold {
-    --weather-theme: #003366; /* Dark blue */
-    --weather-accent: #001a33; /* Navy */
-  }
-  
-  body.night.clear {
-    --weather-theme: #1a1a2e; /* Dark indigo */
-    --weather-accent: #16213e;
-  }
-  
-  body.night.clouds {
-    --weather-theme: #2d3436; /* Dark gray */
-    --weather-accent: #636e72;
-  }
+}
