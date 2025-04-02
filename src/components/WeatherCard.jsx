@@ -1,4 +1,8 @@
+import { useState } from 'react';
+
 const WeatherCard = ({ weatherData, error }) => {
+    const [isCelsius, setIsCelsius] = useState(true);
+    
     const formatTime = (timestamp, timezone) => {
       if (!timestamp || !timezone) return '';
       const date = new Date(timestamp * 1000);
@@ -24,6 +28,10 @@ const WeatherCard = ({ weatherData, error }) => {
         minute: '2-digit',
         hour12: true
       });
+    };
+
+    const convertTemp = (temp) => {
+        return isCelsius ? Math.round(temp) : Math.round((temp * 9/5) + 32);
     };
 
     if (!weatherData) return null;
@@ -57,8 +65,17 @@ const WeatherCard = ({ weatherData, error }) => {
         
         <div className="weather-main">
           <div className="temperature-display">
-            <span className="temperature-value">{Math.round(weatherData.main.temp)}</span>
-            <span className="temperature-unit">°C</span>
+            <span className="temperature-value">{convertTemp(weatherData.main.temp)}</span>
+            <span className="temperature-unit">
+                °{isCelsius ? 'C' : 'F'}
+                <button 
+                    onClick={() => setIsCelsius(!isCelsius)} 
+                    className="temp-toggle"
+                    aria-label={`Switch to ${isCelsius ? 'Fahrenheit' : 'Celsius'}`}
+                >
+                    {isCelsius ? '°F' : '°C'}
+                </button>
+            </span>
           </div>
           <p className="weather-description">
             {weatherData.weather[0].description}
@@ -68,7 +85,7 @@ const WeatherCard = ({ weatherData, error }) => {
         <div className="weather-details">
           <div className="detail-item">
             <span>Feels Like</span>
-            <span>{Math.round(weatherData.main.feels_like)}°</span>
+            <span>{convertTemp(weatherData.main.feels_like)}°</span>
           </div>
           <div className="detail-item">
             <span>Humidity</span>

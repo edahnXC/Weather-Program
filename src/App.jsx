@@ -10,6 +10,7 @@ import useWeather from './hooks/useWeather'
 function App() {
     const [location, setLocation] = useState('Bengaluru')
     const { weatherData, loading, error, fetchWeather } = useWeather()
+    const [backgroundClass, setBackgroundClass] = useState('')
     
     useEffect(() => {
         if (!weatherData) return;
@@ -22,30 +23,32 @@ function App() {
         const isNightTime = hours < 6 || hours >= 18;
         const temp = weatherData.main.temp;
     
-        // Reset all classes
-        document.body.classList.remove(
-            'day', 'night', 'clear', 'clouds', 'rain', 
-            'thunderstorm', 'snow', 'hot', 'cold'
-        );
+        // Create the new class string
+        const newClass = [
+            isNightTime ? 'night' : 'day',
+            weatherCondition,
+            temp > 30 ? 'hot' : temp < 10 ? 'cold' : ''
+        ].filter(Boolean).join(' ');
     
-        // Set day/night based on location's local time
-        document.body.classList.add(isNightTime ? 'night' : 'day');
-    
-        // Add weather condition
-        document.body.classList.add(weatherCondition);
-    
-        // Add temperature class
-        if (temp > 30) {
-            document.body.classList.add('hot');
-        } else if (temp < 10) {
-            document.body.classList.add('cold');
+        // Only update if the class has changed
+        if (newClass !== backgroundClass) {
+            // First remove all weather-related classes
+            document.body.classList.remove(
+                'day', 'night', 'clear', 'clouds', 'rain', 
+                'thunderstorm', 'snow', 'hot', 'cold'
+            );
+            
+            // Then add the new classes
+            newClass.split(' ').forEach(cls => document.body.classList.add(cls));
+            
+            setBackgroundClass(newClass);
         }
     }, [weatherData]);
 
     const handleSearch = async (e) => {
         e.preventDefault()
         if (location.trim()) {
-            await fetchWeather(location, 'metric')
+            await fetchWeather(location)
         }
     }
 

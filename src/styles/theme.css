@@ -1,45 +1,47 @@
 /* Light mode colors */
 body.light {
     --text-color: #1a1a1a;
-    --card-bg: rgba(255, 255, 255, 0.92);
+    --card-bg: rgba(255, 255, 255, 0.95);
     --button-bg: #007aff;
     --detail-bg: rgba(120, 120, 128, 0.12);
     --title-color: #1a1a1a;
+    --highlight-color: #007aff;
 }
 
 /* Dark mode colors */
 body.dark {
     --text-color: #f5f5f7;
-    --card-bg: rgba(28, 28, 30, 0.92);
+    --card-bg: rgba(28, 28, 30, 0.95);
     --button-bg: #0a84ff;
     --detail-bg: rgba(120, 120, 128, 0.18);
     --title-color: #ffffff;
+    --highlight-color: #0a84ff;
 }
 
-/* Weather condition themes */
+/* Weather condition themes - more vibrant colors */
 body.clear {
-    --weather-theme: #5ac8fa;
+    --weather-theme: #47a8ff;
     --weather-accent: #007aff;
 }
 
 body.clouds {
-    --weather-theme: #d1d1d6;
-    --weather-accent: #8e8e93;
+    --weather-theme: #a5c8ff;
+    --weather-accent: #5e8cff;
 }
 
 body.rain {
     --weather-theme: #5e9cff;
-    --weather-accent: #0040dd;
+    --weather-accent: #0066ff;
 }
 
 body.thunderstorm {
-    --weather-theme: #5856d6;
-    --weather-accent: #3634a3;
+    --weather-theme: #7d5fff;
+    --weather-accent: #5a31ff;
 }
 
 body.snow {
-    --weather-theme: #e5f3ff;
-    --weather-accent: #64d2ff;
+    --weather-theme: #b3e5ff;
+    --weather-accent: #4fc3f7;
 }
 
 body.hot {
@@ -49,43 +51,37 @@ body.hot {
 
 body.cold {
     --weather-theme: #5ac8fa;
-    --weather-accent: #007aff;
+    --weather-accent: #34aadc;
 }
 
-/* Day/Night themes */
+/* Day/Night themes with more contrast */
 body.day {
     background: linear-gradient(135deg, var(--weather-theme), var(--weather-accent));
 }
 
 body.night {
     background: linear-gradient(135deg, 
-        color-mix(in lab, var(--weather-theme), black 40%), 
-        color-mix(in lab, var(--weather-accent), black 40%));
+        color-mix(in lab, var(--weather-theme), black 50%), 
+        color-mix(in lab, var(--weather-accent), black 50%));
 }
 
 /* Night variants for weather conditions */
 body.night.hot {
-    --weather-theme: #8b0000;
-    --weather-accent: #5a0000;
+    --weather-theme: #ff3b30;
+    --weather-accent: #d70015;
 }
 
 body.night.cold {
-    --weather-theme: #003366;
-    --weather-accent: #001a33;
+    --weather-theme: #007aff;
+    --weather-accent: #0040dd;
 }
 
 body.night.clear {
     --weather-theme: #1a1a2e;
-    --weather-accent: #16213e;
+    --weather-accent: #0d0d1a;
 }
 
 body.night.clouds {
     --weather-theme: #2d3436;
-    --weather-accent: #636e72;
-}
-
-body {
-    background-attachment: fixed;
-    background-size: cover;
-    transition: background 0.5s ease, color 0.3s ease;
+    --weather-accent: #1e2224;
 }
