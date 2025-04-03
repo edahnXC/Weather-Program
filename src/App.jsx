@@ -45,12 +45,13 @@ function App() {
         }
     }, [weatherData]);
 
-    const handleSearch = async (e) => {
-        e.preventDefault()
-        if (location.trim()) {
-            await fetchWeather(location)
+    const handleSearch = async (e, searchLocation) => {
+        e.preventDefault();
+        const locationToSearch = searchLocation || location.trim();
+        if (locationToSearch) {
+            await fetchWeather(locationToSearch);
         }
-    }
+    };
 
     return (
         <div className="app-container">
@@ -103,4 +104,4 @@ function App() {
     )
 }
 
-export default App
+export default App;

@@ -23,11 +23,12 @@ const SearchBar = ({ location, setLocation, handleSearch }) => {
     }
     
     setError(null);
-    setLocation(formattedLocation);
     setIsSearching(true);
     
     try {
-      await handleSearch(e);
+      await handleSearch(e, formattedLocation);
+      // Only update location state if search was successful
+      setLocation(formattedLocation);
     } finally {
       setIsSearching(false);
     }
