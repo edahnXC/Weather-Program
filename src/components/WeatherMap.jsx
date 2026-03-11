@@ -2,21 +2,56 @@ import { useEffect, useRef, useState } from 'react'
 import '../styles/WeatherMap.css'
 
 const LAYERS = [
-    { id: 'precipitation_new', label: '🌧 Rain', color: '#60a5fa' },
-    { id: 'clouds_new',        label: '☁️ Clouds', color: '#94a3b8' },
-    { id: 'temp_new',          label: '🌡 Temp', color: '#f97316' },
-    { id: 'wind_new',          label: '💨 Wind', color: '#34d399' },
+    { id: 'precipitation_new', label: '🌧 Rain',   color: '#60a5fa', opacity: 0.7 },
+    { id: 'clouds_new',        label: '☁️ Clouds', color: '#94a3b8', opacity: 0.75 },
+    { id: 'temp_new',          label: '🌡 Temp',   color: '#f97316', opacity: 0.65 },
+    { id: 'wind_new',          label: '💨 Wind',   color: '#34d399', opacity: 0.72 },
 ]
 
+const BASE_TILES = {
+    dark:  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+}
+
 const WeatherMap = ({ lat, lon, cityName }) => {
-    const mapRef = useRef(null)
-    const leafletMap = useRef(null)
+    const mapRef       = useRef(null)
+    const leafletMap   = useRef(null)
     const weatherLayer = useRef(null)
+    const baseLayer    = useRef(null)
     const [activeLayer, setActiveLayer] = useState('precipitation_new')
     const apiKey = import.meta.env.VITE_WEATHER_API_KEY
 
+    /* ── helpers ─────────────────────────────────────── */
+    const isDark = () => document.body.dataset.theme === 'dark'
+
+    const applyBaseLayer = (L) => {
+        if (!leafletMap.current) return
+        if (baseLayer.current) {
+            leafletMap.current.removeLayer(baseLayer.current)
+        }
+        baseLayer.current = L.tileLayer(
+            isDark() ? BASE_TILES.dark : BASE_TILES.light,
+            { subdomains: 'abcd', maxZoom: 19 }
+        ).addTo(leafletMap.current)
+        baseLayer.current.bringToBack()
+    }
+
+    const applyWeatherLayer = (layerId, L) => {
+        const Leaflet = L || window.L
+        if (!leafletMap.current || !Leaflet) return
+        if (weatherLayer.current) {
+            leafletMap.current.removeLayer(weatherLayer.current)
+            weatherLayer.current = null
+        }
+        const layer = LAYERS.find(l => l.id === layerId)
+        weatherLayer.current = Leaflet.tileLayer(
+            `https://tile.openweathermap.org/map/${layerId}/{z}/{x}/{y}.png?appid=${apiKey}`,
+            { opacity: layer?.opacity ?? 0.7, maxZoom: 19 }
+        ).addTo(leafletMap.current)
+    }
+
+    /* ── init map ────────────────────────────────────── */
     useEffect(() => {
-        // Dynamically load Leaflet CSS
         if (!document.getElementById('leaflet-css')) {
             const link = document.createElement('link')
             link.id = 'leaflet-css'
@@ -25,25 +60,19 @@ const WeatherMap = ({ lat, lon, cityName }) => {
             document.head.appendChild(link)
         }
 
-        // Dynamically load Leaflet JS
         const initMap = () => {
             if (!mapRef.current || leafletMap.current) return
             const L = window.L
 
             leafletMap.current = L.map(mapRef.current, {
                 center: [lat, lon],
-                zoom: 7,
+                zoom: 5,
                 zoomControl: true,
                 attributionControl: false,
             })
 
-            // Base tile layer (dark/light style)
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                subdomains: 'abcd',
-                maxZoom: 19,
-            }).addTo(leafletMap.current)
+            applyBaseLayer(L)
 
-            // City marker
             const icon = L.divIcon({
                 html: `<div class="map-pin"><span>${cityName}</span></div>`,
                 className: '',
@@ -51,8 +80,7 @@ const WeatherMap = ({ lat, lon, cityName }) => {
             })
             L.marker([lat, lon], { icon }).addTo(leafletMap.current)
 
-            // Weather overlay
-            addWeatherLayer(activeLayer)
+            applyWeatherLayer(activeLayer, L)
         }
 
         if (window.L) {
@@ -72,31 +100,34 @@ const WeatherMap = ({ lat, lon, cityName }) => {
         }
     }, [lat, lon])
 
-    const addWeatherLayer = (layerId) => {
-        const L = window.L
-        if (!leafletMap.current || !L) return
+    /* ── watch for theme changes via MutationObserver ── */
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            if (!leafletMap.current || !window.L) return
+            applyBaseLayer(window.L)
+            applyWeatherLayer(activeLayer, window.L)
+        })
 
-        if (weatherLayer.current) {
-            leafletMap.current.removeLayer(weatherLayer.current)
+        // Watch data-theme attribute on body
+        observer.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['data-theme'],
+        })
+
+        return () => observer.disconnect()
+    }, [activeLayer])
+
+    /* ── fly to new city ─────────────────────────────── */
+    useEffect(() => {
+        if (leafletMap.current) {
+            leafletMap.current.flyTo([lat, lon], 5, { duration: 1.2 })
         }
-
-        weatherLayer.current = L.tileLayer(
-            `https://tile.openweathermap.org/map/${layerId}/{z}/{x}/{y}.png?appid=${apiKey}`,
-            { opacity: 0.75, maxZoom: 19 }
-        ).addTo(leafletMap.current)
-    }
+    }, [lat, lon])
 
     const switchLayer = (layerId) => {
         setActiveLayer(layerId)
-        addWeatherLayer(layerId)
+        applyWeatherLayer(layerId, window.L)
     }
-
-    // Fly to new location when coords change
-    useEffect(() => {
-        if (leafletMap.current) {
-            leafletMap.current.flyTo([lat, lon], 7, { duration: 1.2 })
-        }
-    }, [lat, lon])
 
     return (
         <div className="weather-map-card">
@@ -115,6 +146,38 @@ const WeatherMap = ({ lat, lon, cityName }) => {
                     ))}
                 </div>
             </div>
+
+            <div className="map-legend">
+                {activeLayer === 'precipitation_new' && (
+                    <div className="legend-bar">
+                        <span>0mm</span>
+                        <div className="legend-gradient rain-gradient" />
+                        <span>50mm+</span>
+                    </div>
+                )}
+                {activeLayer === 'temp_new' && (
+                    <div className="legend-bar">
+                        <span>-40°</span>
+                        <div className="legend-gradient temp-gradient" />
+                        <span>+40°</span>
+                    </div>
+                )}
+                {activeLayer === 'clouds_new' && (
+                    <div className="legend-bar">
+                        <span>0%</span>
+                        <div className="legend-gradient cloud-gradient" />
+                        <span>100%</span>
+                    </div>
+                )}
+                {activeLayer === 'wind_new' && (
+                    <div className="legend-bar">
+                        <span>0 m/s</span>
+                        <div className="legend-gradient wind-gradient" />
+                        <span>50 m/s</span>
+                    </div>
+                )}
+            </div>
+
             <div ref={mapRef} className="map-container" />
         </div>
     )

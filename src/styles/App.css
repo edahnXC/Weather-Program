@@ -1,7 +1,7 @@
 .app-wrapper {
     position: relative;
     min-height: 100vh;
-    z-index: 1;
+    /* NO z-index here — let it sit naturally above the fixed animation */
 }
 
 .app-container {
@@ -14,6 +14,7 @@
     min-height: 100vh;
     gap: 1.5rem;
     box-sizing: border-box;
+    position: relative;
 }
 
 /* ---- Header ---- */
@@ -61,7 +62,7 @@
     align-items: stretch;
 }
 
-/* ---- Welcome screen — truly centered ---- */
+/* ---- Welcome screen ---- */
 .welcome-screen {
     flex: 1;
     width: 100%;
@@ -115,7 +116,6 @@
     text-align: center;
 }
 
-/* Wider search bar on the welcome screen */
 .welcome-search {
     width: 100%;
     max-width: 520px;
@@ -123,9 +123,7 @@
     z-index: 1;
 }
 
-.welcome-search .search-form {
-    width: 100%;
-}
+.welcome-search .search-form { width: 100%; }
 
 .welcome-search .search-wrap {
     padding: 0 0.75rem 0 1.25rem;
@@ -294,3 +292,70 @@
     .app-container { padding: 0.75rem; }
     .weather-grid { gap: 0.75rem; }
 }
+
+/* ---- Geo buttons ---- */
+.geo-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-tile);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: var(--font-main);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    z-index: 1;
+}
+
+.geo-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.geo-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.geo-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--border-strong);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.geo-error {
+    font-size: 0.82rem;
+    color: #f87171;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+
+.geo-btn-small {
+    background: var(--bg-tile);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    padding: 0.4rem 0.65rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.geo-btn-small:hover:not(:disabled) {
+    border-color: var(--accent);
+    transform: scale(1.08);
+}
+
+.geo-btn-small:disabled { opacity: 0.6; cursor: not-allowed; }

@@ -9,11 +9,11 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 420px;
+    min-height: 480px;
 }
 
 .map-header {
-    padding: 1.25rem 1.5rem 1rem;
+    padding: 1.25rem 1.5rem 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -39,8 +39,8 @@
     background: var(--bg-tile);
     border: 1px solid var(--border-color);
     border-radius: 50px;
-    padding: 0.3rem 0.75rem;
-    font-size: 0.78rem;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     font-family: var(--font-main);
     color: var(--text-secondary);
@@ -57,61 +57,136 @@
     background: var(--tab-color, var(--accent));
     border-color: var(--tab-color, var(--accent));
     color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
+/* ---- Legend ---- */
+.map-legend {
+    padding: 0.6rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.legend-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+.legend-gradient {
+    flex: 1;
+    height: 6px;
+    border-radius: 6px;
+}
+
+.rain-gradient {
+    background: linear-gradient(to right,
+        #9ecae1, #3182bd, #08519c,
+        #74c476, #31a354, #006d2c,
+        #fd8d3c, #e6550d, #a63603
+    );
+}
+
+.temp-gradient {
+    background: linear-gradient(to right,
+        #4575b4, #74add1, #abd9e9,
+        #e0f3f8, #fee090, #fdae61,
+        #f46d43, #d73027
+    );
+}
+
+
+.cloud-gradient {
+    background: linear-gradient(to right,
+        rgba(186, 230, 253, 0.4),
+        #7dd3fc,
+        #38bdf8,
+        #0284c7,
+        #0369a1
+    );
+}
+
+.wind-gradient {
+    background: linear-gradient(to right,
+        #3288bd, #66c2a5, #abdda4,
+        #e6f598, #fee08b, #fdae61,
+        #f46d43, #d53e4f
+    );
+}
+
+/* ---- Map container ---- */
 .map-container {
     flex: 1;
-    min-height: 360px;
+    min-height: 380px;
     width: 100%;
     z-index: 0;
 }
 
-/* Leaflet overrides */
+/* ---- Leaflet zoom controls ---- */
 .map-container .leaflet-control-zoom {
     border: 1px solid var(--border-color) !important;
     border-radius: var(--radius-sm) !important;
     overflow: hidden;
+    box-shadow: var(--shadow-tile) !important;
 }
 
 .map-container .leaflet-control-zoom a {
     background: var(--bg-card) !important;
     color: var(--text-primary) !important;
-    border: none !important;
-    font-size: 1rem !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    font-size: 1.1rem !important;
+    line-height: 26px !important;
+    width: 28px !important;
+    height: 28px !important;
+    transition: background 0.2s ease !important;
 }
 
-/* City pin */
+.map-container .leaflet-control-zoom a:hover {
+    background: var(--bg-tile) !important;
+}
+
+.map-container .leaflet-control-zoom-out {
+    border-bottom: none !important;
+}
+
+/* ---- City pin ---- */
 .map-pin {
     background: var(--accent);
     color: #fff;
     font-family: var(--font-main);
     font-size: 0.72rem;
     font-weight: 700;
-    padding: 0.2rem 0.5rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 50px;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     position: relative;
+    letter-spacing: 0.02em;
 }
 
 .map-pin::after {
     content: '';
     position: absolute;
-    bottom: -4px;
+    bottom: -5px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid var(--accent);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--accent);
 }
 
+/* ---- Responsive ---- */
 @media (max-width: 900px) {
-    .weather-map-card {
-        min-height: 340px;
-    }
-    .map-container {
-        min-height: 280px;
-    }
+    .weather-map-card { min-height: 400px; }
+    .map-container { min-height: 320px; }
+}
+
+@media (max-width: 600px) {
+    .map-header { padding: 1rem 1.25rem 0.75rem; }
+    .map-legend { padding: 0.5rem 1.25rem; }
+    .layer-tab { padding: 0.25rem 0.65rem; font-size: 0.75rem; }
 }
