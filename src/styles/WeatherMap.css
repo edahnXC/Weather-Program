@@ -3,8 +3,8 @@
     border-radius: var(--radius-xl);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-card);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /* backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px); */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -100,11 +100,11 @@
 
 .cloud-gradient {
     background: linear-gradient(to right,
-        rgba(186, 230, 253, 0.4),
-        #7dd3fc,
-        #38bdf8,
-        #0284c7,
-        #0369a1
+        transparent,
+        #bfdbfe,
+        #60a5fa,
+        #2563eb,
+        #1e40af
     );
 }
 
@@ -189,4 +189,7 @@
     .map-header { padding: 1rem 1.25rem 0.75rem; }
     .map-legend { padding: 0.5rem 1.25rem; }
     .layer-tab { padding: 0.25rem 0.65rem; font-size: 0.75rem; }
+}/* Tint the greyscale OWM cloud tiles blue */
+.cloud-layer-tiles {
+    filter: hue-rotate(200deg) saturate(3) brightness(1.1);
 }

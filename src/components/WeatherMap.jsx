@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import '../styles/WeatherMap.css'
 
 const LAYERS = [
-    { id: 'precipitation_new', label: '🌧 Rain',   color: '#60a5fa', opacity: 0.7 },
-    { id: 'clouds_new',        label: '☁️ Clouds', color: '#94a3b8', opacity: 0.75 },
+    { id: 'precipitation_new', label: '🌧 Rain',   color: '#60a5fa', opacity: 0.7  },
+    { id: 'clouds_new',        label: '☁️ Clouds', color: '#4b85d5', opacity: 0.92 }, // ← was 0.75
     { id: 'temp_new',          label: '🌡 Temp',   color: '#f97316', opacity: 0.65 },
     { id: 'wind_new',          label: '💨 Wind',   color: '#34d399', opacity: 0.72 },
 ]
@@ -37,18 +37,26 @@ const WeatherMap = ({ lat, lon, cityName }) => {
     }
 
     const applyWeatherLayer = (layerId, L) => {
-        const Leaflet = L || window.L
-        if (!leafletMap.current || !Leaflet) return
-        if (weatherLayer.current) {
-            leafletMap.current.removeLayer(weatherLayer.current)
-            weatherLayer.current = null
-        }
-        const layer = LAYERS.find(l => l.id === layerId)
-        weatherLayer.current = Leaflet.tileLayer(
-            `https://tile.openweathermap.org/map/${layerId}/{z}/{x}/{y}.png?appid=${apiKey}`,
-            { opacity: layer?.opacity ?? 0.7, maxZoom: 19 }
-        ).addTo(leafletMap.current)
+    const Leaflet = L || window.L
+    if (!leafletMap.current || !Leaflet) return
+    if (weatherLayer.current) {
+        leafletMap.current.removeLayer(weatherLayer.current)
+        weatherLayer.current = null
     }
+    const layer = LAYERS.find(l => l.id === layerId)
+
+    // For cloud layer: add a className so we can CSS-tint it blue
+    const tileOptions = {
+        opacity: layer?.opacity ?? 0.7,
+        maxZoom: 19,
+        className: layerId === 'clouds_new' ? 'cloud-layer-tiles' : '',
+    }
+
+    weatherLayer.current = Leaflet.tileLayer(
+        `https://tile.openweathermap.org/map/${layerId}/{z}/{x}/{y}.png?appid=${apiKey}`,
+        tileOptions
+    ).addTo(leafletMap.current)
+}
 
     /* ── init map ────────────────────────────────────── */
     useEffect(() => {
