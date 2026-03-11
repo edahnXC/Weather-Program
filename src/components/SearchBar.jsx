@@ -2,7 +2,7 @@ import { useState } from 'react'
 import '../styles/SearchBar.css'
 
 const SearchBar = ({ location, setLocation, handleSearch }) => {
-    const [input, setInput] = useState(location)
+    const [input, setInput] = useState('')
     const [busy, setBusy] = useState(false)
     const [err, setErr] = useState(null)
 
@@ -22,6 +22,12 @@ const SearchBar = ({ location, setLocation, handleSearch }) => {
         }
     }
 
+    // Also clear error when going home (input reset)
+    const handleChange = (e) => {
+        setInput(e.target.value)
+        if (err) setErr(null)
+    }
+
     return (
         <form onSubmit={onSubmit} className="search-form">
             <div className="search-wrap">
@@ -31,7 +37,7 @@ const SearchBar = ({ location, setLocation, handleSearch }) => {
                 <input
                     type="text"
                     value={input}
-                    onChange={e => { setInput(e.target.value); setErr(null) }}
+                    onChange={handleChange}
                     placeholder="Search city..."
                     className="search-input"
                     aria-label="Search city"

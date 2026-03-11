@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import WeatherCard from './components/WeatherCard'
 import ForecastPanel from './components/ForecastPanel'
+import WeatherMap from './components/WeatherMap'
 import SearchBar from './components/SearchBar'
 import ThemeToggle from './components/ThemeToggle'
 import useWeather from './hooks/useWeather'
@@ -38,22 +39,39 @@ function App() {
         }
     }
 
+    const goHome = () => {
+        setHasSearched(false)
+        setLocation('')
+        document.body.className = ''
+    }
+
     return (
         <div className="app-wrapper">
             <div className="app-container">
                 <header className="app-header">
-                    <div className="brand">
+                    <div className="brand" onClick={goHome} role="button" title="Go home">
                         <span className="brand-icon">⛅</span>
                         <h1 className="brand-title">Nimbus</h1>
                     </div>
-                    <div className="header-controls">
-                        <SearchBar
-                            location={location}
-                            setLocation={setLocation}
-                            handleSearch={handleSearch}
-                        />
-                        <ThemeToggle />
-                    </div>
+
+                    {/* Header search only shown after first search */}
+                    {hasSearched && (
+                        <div className="header-controls">
+                            <SearchBar
+                                location={location}
+                                setLocation={setLocation}
+                                handleSearch={handleSearch}
+                            />
+                            <ThemeToggle />
+                        </div>
+                    )}
+
+                    {/* Theme toggle always visible */}
+                    {!hasSearched && (
+                        <div className="header-controls" style={{ justifyContent: 'flex-end' }}>
+                            <ThemeToggle />
+                        </div>
+                    )}
                 </header>
 
                 <main className="app-main">
@@ -62,6 +80,16 @@ function App() {
                             <div className="welcome-orb" />
                             <h2 className="welcome-title">Real-time weather,<br />anywhere on Earth.</h2>
                             <p className="welcome-sub">Search a city to get started</p>
+
+                            {/* Big centered search bar on welcome */}
+                            <div className="welcome-search">
+                                <SearchBar
+                                    location={location}
+                                    setLocation={setLocation}
+                                    handleSearch={handleSearch}
+                                />
+                            </div>
+
                             <div className="sample-cities">
                                 {['Mumbai', 'Tokyo', 'London', 'New York'].map(city => (
                                     <button
@@ -97,10 +125,19 @@ function App() {
                         </div>
                     )}
 
-                    {weatherData && !loading && (
-                        <div className="weather-layout">
-                            <WeatherCard weatherData={weatherData} />
-                            {forecastData && <ForecastPanel forecastData={forecastData} timezone={weatherData.timezone} />}
+                    {weatherData && !loading && hasSearched && (
+                        <div className="weather-grid">
+                            <div className="col-left">
+                                <WeatherCard weatherData={weatherData} />
+                                <ForecastPanel forecastData={forecastData} timezone={weatherData.timezone} />
+                            </div>
+                            <div className="col-right">
+                                <WeatherMap
+                                    lat={weatherData.coord.lat}
+                                    lon={weatherData.coord.lon}
+                                    cityName={weatherData.name}
+                                />
+                            </div>
                         </div>
                     )}
                 </main>
