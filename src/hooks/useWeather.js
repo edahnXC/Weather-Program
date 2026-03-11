@@ -1,51 +1,63 @@
 import { useState } from 'react'
 
 const useWeather = () => {
-  const [weatherData, setWeatherData] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [unit, setUnit] = useState('metric')
+    const [weatherData, setWeatherData] = useState(null)
+    const [forecastData, setForecastData] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
 
-  const fetchWeather = async (location, newUnit = unit) => {
-    setLoading(true)
-    setError(null)
-    setUnit(newUnit)
-    
-    try {
-      let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&units=${newUnit}&appid=${import.meta.env.VITE_WEATHER_API_KEY}`
-      
-      let response = await fetch(apiUrl)
-      let data = await response.json()
-      
-      if (data.cod === '404') {
-        apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)},IN&units=${newUnit}&appid=${import.meta.env.VITE_WEATHER_API_KEY}`
-        response = await fetch(apiUrl)
-        data = await response.json()
-      }
-      
-      if (data.cod === '404' && location.includes(',')) {
-        const [lat, lon] = location.split(',').map(coord => coord.trim())
-        if (!isNaN(lat) && !isNaN(lon)) {
-          apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${newUnit}&appid=${import.meta.env.VITE_WEATHER_API_KEY}`
-          response = await fetch(apiUrl)
-          data = await response.json()
-        }
-      }
-      
-      if (data.cod && data.cod !== 200) {
-        throw new Error(data.message || `Couldn't find weather for "${location}"`)
-      }
-      
-      setWeatherData(data)
-    } catch (err) {
-      setError(err.message)
-      setWeatherData(null)
-    } finally {
-      setLoading(false)
+    const buildUrl = (type, query, unit) => {
+        const key = import.meta.env.VITE_WEATHER_API_KEY
+        const base = 'https://api.openweathermap.org/data/2.5'
+        return `${base}/${type}?${query}&units=${unit}&appid=${key}`
     }
-  }
 
-  return { weatherData, loading, error, fetchWeather, unit }
+    const fetchWeather = async (location, unit = 'metric') => {
+        setLoading(true)
+        setError(null)
+
+        try {
+            let query = `q=${encodeURIComponent(location)}`
+
+            if (location.includes(',')) {
+                const [a, b] = location.split(',').map(s => s.trim())
+                if (!isNaN(a) && !isNaN(b)) {
+                    query = `lat=${a}&lon=${b}`
+                }
+            }
+
+            let [wRes, fRes] = await Promise.all([
+                fetch(buildUrl('weather', query, unit)),
+                fetch(buildUrl('forecast', query, unit))
+            ])
+
+            let [wData, fData] = await Promise.all([wRes.json(), fRes.json()])
+
+            if (wData.cod === '404' && !location.includes(',')) {
+                const indiaQuery = `q=${encodeURIComponent(location + ',IN')}`
+                ;[wRes, fRes] = await Promise.all([
+                    fetch(buildUrl('weather', indiaQuery, unit)),
+                    fetch(buildUrl('forecast', indiaQuery, unit))
+                ])
+                ;[wData, fData] = await Promise.all([wRes.json(), fRes.json()])
+            }
+
+            if (wData.cod && wData.cod !== 200) {
+                throw new Error(`Couldn't find "${location}"`)
+            }
+
+            setWeatherData(wData)
+            setForecastData(fData)
+        } catch (err) {
+            setError(err.message)
+            setWeatherData(null)
+            setForecastData(null)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return { weatherData, forecastData, loading, error, fetchWeather }
 }
 
 export default useWeather

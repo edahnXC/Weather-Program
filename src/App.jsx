@@ -1,107 +1,116 @@
 import { useState, useEffect } from 'react'
-import './styles/App.css'
-import './styles/theme.css'
-import './styles/WeatherCard.css'
 import WeatherCard from './components/WeatherCard'
+import ForecastPanel from './components/ForecastPanel'
 import SearchBar from './components/SearchBar'
 import ThemeToggle from './components/ThemeToggle'
 import useWeather from './hooks/useWeather'
+import './styles/App.css'
+import './styles/theme.css'
 
 function App() {
-    const [location, setLocation] = useState('Bengaluru')
-    const { weatherData, loading, error, fetchWeather } = useWeather()
-    const [backgroundClass, setBackgroundClass] = useState('')
-    
+    const [location, setLocation] = useState('')
+    const { weatherData, forecastData, loading, error, fetchWeather } = useWeather()
+    const [hasSearched, setHasSearched] = useState(false)
+
     useEffect(() => {
-        if (!weatherData) return;
-    
-        const weatherCondition = weatherData.weather[0].main.toLowerCase();
-        const now = new Date();
-        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-        const localTime = new Date(utc + (weatherData.timezone * 1000));
-        const hours = localTime.getHours();
-        const isNightTime = hours < 6 || hours >= 18;
-        const temp = weatherData.main.temp;
-    
-        // Create the new class string
-        const newClass = [
-            isNightTime ? 'night' : 'day',
-            weatherCondition,
+        if (!weatherData) return
+        const condition = weatherData.weather[0].main.toLowerCase()
+        const now = new Date()
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000
+        const localTime = new Date(utc + weatherData.timezone * 1000)
+        const hours = localTime.getHours()
+        const isNight = hours < 6 || hours >= 19
+        const temp = weatherData.main.temp
+
+        document.body.className = [
+            isNight ? 'night' : 'day',
+            condition,
             temp > 30 ? 'hot' : temp < 10 ? 'cold' : ''
-        ].filter(Boolean).join(' ');
-    
-        // Only update if the class has changed
-        if (newClass !== backgroundClass) {
-            // First remove all weather-related classes
-            document.body.classList.remove(
-                'day', 'night', 'clear', 'clouds', 'rain', 
-                'thunderstorm', 'snow', 'hot', 'cold'
-            );
-            
-            // Then add the new classes
-            newClass.split(' ').forEach(cls => document.body.classList.add(cls));
-            
-            setBackgroundClass(newClass);
-        }
-    }, [weatherData]);
+        ].filter(Boolean).join(' ')
+    }, [weatherData])
 
     const handleSearch = async (e, searchLocation) => {
-        e.preventDefault();
-        const locationToSearch = searchLocation || location.trim();
-        if (locationToSearch) {
-            await fetchWeather(locationToSearch);
+        e.preventDefault()
+        const loc = searchLocation || location.trim()
+        if (loc) {
+            setHasSearched(true)
+            await fetchWeather(loc)
         }
-    };
+    }
 
     return (
-        <div className="app-container">
-            <header className="header-container">
-                <h1 className="app-title">Weather Forecast</h1>
-                <div className="controls-container">
-                    <div className="search-toggle-container">
-                        <SearchBar 
+        <div className="app-wrapper">
+            <div className="app-container">
+                <header className="app-header">
+                    <div className="brand">
+                        <span className="brand-icon">⛅</span>
+                        <h1 className="brand-title">Nimbus</h1>
+                    </div>
+                    <div className="header-controls">
+                        <SearchBar
                             location={location}
                             setLocation={setLocation}
                             handleSearch={handleSearch}
                         />
                         <ThemeToggle />
                     </div>
-                </div>
-            </header>
-            
-            <main className="weather-main">
-                {loading && (
-                    <div className="loading-container">
-                        <div className="spinner"></div>
-                        <p>Loading weather data...</p>
-                    </div>
-                )}
-                
-                {error && (
-                    <div className="error-container">
-                        <p className="error-message">{error}</p>
-                        <p>Try these formats:</p>
-                        <ul className="suggestions-list">
-                            <li>"Bengaluru, IN"</li>
-                            <li>"Mumbai"</li>
-                            <li>Lat/Long: "12.9716,77.5946"</li>
-                        </ul>
-                    </div>
-                )}
-                
-                {weatherData && (
-                    <WeatherCard 
-                        weatherData={weatherData} 
-                        error={error}
-                    />
-                )}
-            </main>
-            
-            <footer className="app-footer">
-                <p>© {new Date().getFullYear()} Weather App - Powered by OpenWeatherMap</p>
-            </footer>
+                </header>
+
+                <main className="app-main">
+                    {!hasSearched && !loading && (
+                        <div className="welcome-screen">
+                            <div className="welcome-orb" />
+                            <h2 className="welcome-title">Real-time weather,<br />anywhere on Earth.</h2>
+                            <p className="welcome-sub">Search a city to get started</p>
+                            <div className="sample-cities">
+                                {['Mumbai', 'Tokyo', 'London', 'New York'].map(city => (
+                                    <button
+                                        key={city}
+                                        className="city-pill"
+                                        onClick={() => {
+                                            setLocation(city)
+                                            setHasSearched(true)
+                                            fetchWeather(city)
+                                        }}
+                                    >
+                                        {city}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {loading && (
+                        <div className="loading-screen">
+                            <div className="pulse-ring" />
+                            <div className="pulse-ring delay-1" />
+                            <div className="pulse-ring delay-2" />
+                            <p className="loading-text">Fetching weather...</p>
+                        </div>
+                    )}
+
+                    {error && !loading && (
+                        <div className="error-screen">
+                            <span className="error-icon">🌧️</span>
+                            <p className="error-title">Couldn't find that location</p>
+                            <p className="error-hint">Try: "Mumbai", "London, GB", or "28.6,77.2"</p>
+                        </div>
+                    )}
+
+                    {weatherData && !loading && (
+                        <div className="weather-layout">
+                            <WeatherCard weatherData={weatherData} />
+                            {forecastData && <ForecastPanel forecastData={forecastData} timezone={weatherData.timezone} />}
+                        </div>
+                    )}
+                </main>
+
+                <footer className="app-footer">
+                    <p>Powered by <span>OpenWeatherMap</span> · © {new Date().getFullYear()} Nimbus</p>
+                </footer>
+            </div>
         </div>
     )
 }
 
-export default App;
+export default App
