@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class WeatherService {
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
-  private baseUrl = 'http://localhost:5000/api/weather';
+  private baseUrl = isDevMode() ? 'http://localhost:5000/api/weather' : '/api/weather';
 
   constructor(private http: HttpClient) {}
 

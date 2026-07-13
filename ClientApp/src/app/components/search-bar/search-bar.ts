@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, isDevMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -20,7 +20,7 @@ export class SearchBarComponent {
   highlighted = -1;
   busy = false;
   private debounceRef: any = null;
-  private baseUrl = 'http://localhost:5000/api/weather';
+  private baseUrl = isDevMode() ? 'http://localhost:5000/api/weather' : '/api/weather';
 
   constructor(private http: HttpClient, private eRef: ElementRef) {}
 

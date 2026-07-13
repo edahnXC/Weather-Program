@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild, isDevMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 declare var L: any;
@@ -34,7 +34,7 @@ export class WeatherMapComponent implements OnInit, OnChanges, OnDestroy {
   weatherLayer: any = null;
   baseLayer: any = null;
   observer: MutationObserver | null = null;
-  baseUrl = 'http://localhost:5000/api/weather';
+  baseUrl = isDevMode() ? 'http://localhost:5000/api/weather' : '/api/weather';
 
   ngOnInit() {
     this.ensureLeafletLoaded().then(() => this.initMap());
