@@ -18,15 +18,15 @@ export class WeatherMapComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef;
 
   LAYERS = [
-    { id: 'precipitation_new', label: '🌧 Rain',   color: '#60a5fa', opacity: 0.7  },
-    { id: 'clouds_new',        label: '☁️ Clouds', color: '#4b85d5', opacity: 0.92 },
-    { id: 'temp_new',          label: '🌡 Temp',   color: '#f97316', opacity: 0.65 },
-    { id: 'wind_new',          label: '💨 Wind',   color: '#34d399', opacity: 0.72 },
+    { id: 'precipitation_new', label: '🌧 Rain',   color: '#60a5fa', opacity: 1.0  },
+    { id: 'clouds_new',        label: '☁️ Clouds', color: '#4b85d5', opacity: 1.0  },
+    { id: 'temp_new',          label: '🌡 Temp',   color: '#f97316', opacity: 0.85 },
+    { id: 'wind_new',          label: '💨 Wind',   color: '#34d399', opacity: 0.90 },
   ];
 
   BASE_TILES = {
     dark:  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    light: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
   };
 
   activeLayer = 'precipitation_new';
@@ -147,7 +147,7 @@ export class WeatherMapComponent implements OnInit, OnChanges, OnDestroy {
     const tileOptions = {
       opacity: layer?.opacity ?? 0.7,
       maxZoom: 19,
-      className: layerId === 'clouds_new' ? 'cloud-layer-tiles' : '',
+      className: (layerId === 'clouds_new' ? 'cloud-layer-tiles ' : '') + (this.isDark() ? 'weather-layer-dark' : ''),
     };
     
     this.weatherLayer = L.tileLayer(

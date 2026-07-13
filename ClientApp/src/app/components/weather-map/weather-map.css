@@ -193,3 +193,11 @@
 .cloud-layer-tiles {
     filter: hue-rotate(200deg) saturate(3) brightness(1.1);
 }
+
+/* Boost brightness and saturation of weather layers on the dark map */
+.weather-layer-dark {
+    filter: brightness(1.3) saturate(1.4) !important;
+}
+.cloud-layer-tiles.weather-layer-dark {
+    filter: hue-rotate(200deg) saturate(3.5) brightness(1.4) !important;
+}
