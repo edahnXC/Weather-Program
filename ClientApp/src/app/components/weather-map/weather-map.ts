@@ -18,14 +18,14 @@ export class WeatherMapComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef;
 
   LAYERS = [
-    { id: 'precipitation_new', label: '🌧 Rain',   color: '#60a5fa', opacity: 1.0  },
-    { id: 'clouds_new',        label: '☁️ Clouds', color: '#4b85d5', opacity: 1.0  },
-    { id: 'temp_new',          label: '🌡 Temp',   color: '#f97316', opacity: 0.85 },
-    { id: 'wind_new',          label: '💨 Wind',   color: '#34d399', opacity: 0.90 },
+    { id: 'precipitation_new', label: '🌧 Rain',   color: '#2563eb', opacity: 1.0  }, // Deep Blue
+    { id: 'clouds_new',        label: '☁️ Clouds', color: '#4f46e5', opacity: 1.0  }, // Deep Indigo
+    { id: 'temp_new',          label: '🌡 Temp',   color: '#ea580c', opacity: 0.85 }, // Deep Orange
+    { id: 'wind_new',          label: '💨 Wind',   color: '#059669', opacity: 0.90 }, // Deep Emerald
   ];
 
   BASE_TILES = {
-    dark:  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    dark:  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
     light: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
   };
 
