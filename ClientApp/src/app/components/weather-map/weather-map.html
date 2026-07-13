@@ -1,0 +1,41 @@
+<div class="weather-map-card">
+    <div class="map-header">
+        <h3 class="map-title">Weather Map</h3>
+        <div class="layer-tabs">
+            <button
+                *ngFor="let layer of LAYERS"
+                class="layer-tab"
+                [class.active]="activeLayer === layer.id"
+                [style.--tab-color]="layer.color"
+                (click)="switchLayer(layer.id)"
+            >
+                {{ layer.label }}
+            </button>
+        </div>
+    </div>
+
+    <div class="map-legend">
+        <div class="legend-bar" *ngIf="activeLayer === 'precipitation_new'">
+            <span>0mm</span>
+            <div class="legend-gradient rain-gradient"></div>
+            <span>50mm+</span>
+        </div>
+        <div class="legend-bar" *ngIf="activeLayer === 'temp_new'">
+            <span>-40°</span>
+            <div class="legend-gradient temp-gradient"></div>
+            <span>+40°</span>
+        </div>
+        <div class="legend-bar" *ngIf="activeLayer === 'clouds_new'">
+            <span>0%</span>
+            <div class="legend-gradient cloud-gradient"></div>
+            <span>100%</span>
+        </div>
+        <div class="legend-bar" *ngIf="activeLayer === 'wind_new'">
+            <span>0 m/s</span>
+            <div class="legend-gradient wind-gradient"></div>
+            <span>50 m/s</span>
+        </div>
+    </div>
+
+    <div #mapContainer class="map-container"></div>
+</div>

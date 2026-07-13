@@ -1,0 +1,8 @@
+<button class="theme-btn" (click)="toggleTheme()" aria-label="Toggle theme">
+    <span class="theme-track">
+        <span class="theme-thumb" [ngClass]="dark ? 'dark' : 'light'">
+            {{ dark ? '🌙' : '☀️' }}
+        </span>
+    </span>
+    <span class="theme-label">{{ dark ? 'Dark' : 'Light' }}</span>
+</button>

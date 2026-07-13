@@ -1,0 +1,12 @@
+<div class="weather-animation" [ngClass]="'weather-animation--' + type" aria-hidden="true" *ngIf="type">
+    <span
+        *ngFor="let p of particles"
+        class="particle"
+        [style.--delay]="p.delay"
+        [style.--duration]="p.duration"
+        [style.--left]="p.left"
+        [style.--size]="p.size"
+        [style.--drift]="p.drift"
+    ></span>
+    <div class="lightning" *ngIf="type === 'thunderstorm'"></div>
+</div>

@@ -1,0 +1,99 @@
+<!-- Outside app-wrapper so it's in its own stacking context -->
+<app-weather-animation *ngIf="weatherCondition" [condition]="weatherCondition"></app-weather-animation>
+
+<div class="app-wrapper">
+    <div class="app-container">
+        <header class="app-header">
+            <div class="brand" (click)="goHome()" role="button" title="Go home">
+                <span class="brand-icon">⛅</span>
+                <h1 class="brand-title">Nimbus</h1>
+            </div>
+
+            <div class="header-controls" *ngIf="hasSearched">
+                <app-search-bar
+                    [(location)]="location"
+                    (search)="handleSearch($event)"
+                ></app-search-bar>
+                <button class="geo-btn-small" (click)="handleGeolocate()" title="Use my location" [disabled]="geoLoading">
+                    {{ geoLoading ? '⏳' : '📍' }}
+                </button>
+                <app-theme-toggle></app-theme-toggle>
+            </div>
+
+            <div class="header-controls" style="justify-content: flex-end" *ngIf="!hasSearched">
+                <app-theme-toggle></app-theme-toggle>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <div class="welcome-screen" *ngIf="!hasSearched && !weatherService.loading()">
+                <div class="welcome-orb"></div>
+                <h2 class="welcome-title">Real-time weather,<br />anywhere on Earth.</h2>
+                <p class="welcome-sub">Search a city or use your location</p>
+
+                <div class="welcome-search">
+                    <app-search-bar
+                        [(location)]="location"
+                        (search)="handleSearch($event)"
+                    ></app-search-bar>
+                </div>
+
+                <button
+                    class="geo-btn"
+                    (click)="handleGeolocate()"
+                    [disabled]="geoLoading"
+                >
+                    <ng-container *ngIf="geoLoading">
+                        <span class="geo-spinner"></span> Detecting location...
+                    </ng-container>
+                    <ng-container *ngIf="!geoLoading">
+                        <span>📍</span> Use my location
+                    </ng-container>
+                </button>
+
+                <p class="geo-error" *ngIf="geoError">{{ geoError }}</p>
+
+                <div class="sample-cities">
+                    <button class="city-pill" (click)="location = 'Mumbai'; handleSearch('Mumbai')">Mumbai</button>
+                    <button class="city-pill" (click)="location = 'Tokyo'; handleSearch('Tokyo')">Tokyo</button>
+                    <button class="city-pill" (click)="location = 'London'; handleSearch('London')">London</button>
+                    <button class="city-pill" (click)="location = 'New York'; handleSearch('New York')">New York</button>
+                </div>
+            </div>
+
+            <div class="loading-screen" *ngIf="weatherService.loading()">
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring delay-1"></div>
+                <div class="pulse-ring delay-2"></div>
+                <p class="loading-text">Fetching weather...</p>
+            </div>
+
+            <div class="error-screen" *ngIf="weatherService.error() && !weatherService.loading()">
+                <span class="error-icon">🌧️</span>
+                <p class="error-title">Couldn't find that location</p>
+                <p class="error-hint">Try: "Mumbai", "London, GB", or "28.6,77.2"</p>
+            </div>
+
+            <div class="weather-grid" *ngIf="weatherService.weatherData() && !weatherService.loading() && hasSearched">
+                <div class="col-left">
+                    <app-weather-card [weatherData]="weatherService.weatherData()"></app-weather-card>
+                    <app-forecast-panel
+                        [forecastData]="weatherService.forecastData()"
+                        [timezone]="weatherService.weatherData()?.timezone"
+                    ></app-forecast-panel>
+                </div>
+                <div class="col-right">
+                    <app-weather-map
+                        [lat]="weatherService.weatherData()?.coord.lat"
+                        [lon]="weatherService.weatherData()?.coord.lon"
+                        [cityName]="weatherService.weatherData()?.name"
+                    ></app-weather-map>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>Powered by <span>OpenWeatherMap</span> · © {{ currentYear }} Nimbus</p>
+        </footer>
+    </div>
+</div>

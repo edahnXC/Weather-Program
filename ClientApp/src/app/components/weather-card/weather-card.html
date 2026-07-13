@@ -1,0 +1,61 @@
+<div class="weather-card" *ngIf="weatherData">
+    <div class="card-top">
+        <div class="location-block">
+            <h2 class="city-name">{{ weatherData.name }}<span class="country">, {{ weatherData.sys.country }}</span></h2>
+            <p class="date-time">
+                {{ currentDate | date:'EEEE, MMMM d' }}
+                <span class="dot">·</span>
+                <span class="local-time">{{ localTimeStr }}</span>
+            </p>
+        </div>
+        <div class="icon-block">
+            <img
+                [src]="'https://openweathermap.org/img/wn/' + weatherData.weather[0].icon + '@2x.png'"
+                [alt]="weatherData.weather[0].description"
+                class="weather-icon"
+            />
+            <span class="condition-badge">{{ isDay ? 'Day' : 'Night' }}</span>
+        </div>
+    </div>
+
+    <div class="temp-hero">
+        <div class="temp-row">
+            <span class="temp-big">{{ temp(weatherData.main.temp) }}</span>
+            <div class="temp-meta">
+                <button class="unit-toggle" (click)="toggleUnit()">
+                    {{ unit() }} <span class="toggle-hint">{{ isCelsius ? '→ °F' : '→ °C' }}</span>
+                </button>
+                <span class="temp-range">
+                    ↑ {{ temp(weatherData.main.temp_max) }}° · ↓ {{ temp(weatherData.main.temp_min) }}°
+                </span>
+            </div>
+        </div>
+        <p class="weather-desc">{{ weatherData.weather[0].description }}</p>
+    </div>
+
+    <div class="details-grid">
+        <div class="detail-tile" *ngFor="let d of details">
+            <span class="tile-icon">{{ d.icon }}</span>
+            <span class="tile-value">{{ d.value }}</span>
+            <span class="tile-label">{{ d.label }}</span>
+        </div>
+    </div>
+
+    <div class="sun-row">
+        <div class="sun-item">
+            <span class="sun-emoji">🌅</span>
+            <div>
+                <span class="sun-label">Sunrise</span>
+                <span class="sun-time">{{ sunriseStr }}</span>
+            </div>
+        </div>
+        <div class="sun-divider"></div>
+        <div class="sun-item">
+            <span class="sun-emoji">🌇</span>
+            <div>
+                <span class="sun-label">Sunset</span>
+                <span class="sun-time">{{ sunsetStr }}</span>
+            </div>
+        </div>
+    </div>
+</div>

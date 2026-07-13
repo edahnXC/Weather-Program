@@ -1,0 +1,52 @@
+<div class="search-outer">
+    <form class="search-form" (ngSubmit)="handleSubmit($event)" autocomplete="off">
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input
+                class="search-input"
+                type="text"
+                [ngModel]="location"
+                (ngModelChange)="handleChange($event)"
+                name="location"
+                (keydown)="handleKeyDown($event)"
+                (focus)="suggestions.length > 0 && (showDrop = true)"
+                placeholder="Search city..."
+                aria-label="Search city"
+                aria-autocomplete="list"
+                [attr.aria-expanded]="showDrop"
+                spellcheck="false"
+            />
+            <button
+                *ngIf="location"
+                type="button"
+                class="search-clear"
+                (click)="clearSearch()"
+                aria-label="Clear"
+            >
+                ✕
+            </button>
+            <button class="search-btn" type="submit" [disabled]="busy">
+                <span class="search-spinner" *ngIf="busy"></span>
+                <ng-container *ngIf="!busy">Search</ng-container>
+            </button>
+        </div>
+    </form>
+
+    <ul class="suggestions-drop" role="listbox" *ngIf="showDrop && suggestions.length > 0">
+        <li
+            *ngFor="let city of suggestions; let i = index"
+            class="suggestion-item"
+            [class.highlighted]="i === highlighted"
+            (mousedown)="pickSuggestion(city)"
+            (mouseenter)="highlighted = i"
+            role="option"
+            [attr.aria-selected]="i === highlighted"
+        >
+            <span class="suggestion-pin">📍</span>
+            <span class="suggestion-name">{{ city.name }}</span>
+            <span class="suggestion-meta">
+                {{ city.state ? city.state + ', ' : '' }}{{ city.country }}
+            </span>
+        </li>
+    </ul>
+</div>

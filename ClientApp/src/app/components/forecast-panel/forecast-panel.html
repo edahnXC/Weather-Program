@@ -1,0 +1,43 @@
+<div class="forecast-panel" *ngIf="forecastData?.list">
+    <section class="forecast-section">
+        <h3 class="section-title">Next 24 Hours</h3>
+        <div class="hourly-strip">
+            <div class="hourly-item" *ngFor="let item of hourly; let i = index">
+                <span class="h-time">{{ i === 0 ? 'Now' : fmtHour(item.dt) }}</span>
+                <img
+                    [src]="'https://openweathermap.org/img/wn/' + item.weather[0].icon + '.png'"
+                    [alt]="item.weather[0].description"
+                    class="h-icon"
+                />
+                <span class="h-temp">{{ Math.round(item.main.temp) }}°</span>
+                <span class="h-pop" *ngIf="item.pop > 0">💧 {{ Math.round(item.pop * 100) }}%</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="forecast-section">
+        <h3 class="section-title">5-Day Forecast</h3>
+        <div class="daily-list">
+            <div class="daily-row" *ngFor="let day of days; let i = index">
+                <span class="d-day">{{ i === 0 ? 'Today' : day.dayKey.split(',')[0] }}</span>
+                <img
+                    [src]="'https://openweathermap.org/img/wn/' + day.weather[0].icon + '.png'"
+                    [alt]="day.weather[0].description"
+                    class="d-icon"
+                />
+                <span class="d-desc">{{ day.weather[0].description }}</span>
+                <div class="d-temps">
+                    <span class="d-high">{{ Math.round(day.main.temp_max) }}°</span>
+                    <div class="temp-bar-track">
+                        <div
+                            class="temp-bar-fill"
+                            [style.width]="Math.min(100, Math.max(20, ((day.main.temp - 0) / 45) * 100)) + '%'"
+                        ></div>
+                    </div>
+                    <span class="d-low">{{ Math.round(day.main.temp_min) }}°</span>
+                </div>
+                <span class="d-pop" *ngIf="day.pop > 0">💧 {{ Math.round(day.pop * 100) }}%</span>
+            </div>
+        </div>
+    </section>
+</div>
