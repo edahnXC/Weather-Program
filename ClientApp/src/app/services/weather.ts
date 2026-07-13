@@ -19,7 +19,7 @@ export class WeatherService {
     this.error.set(null);
 
     try {
-      let query = `q=${encodeURIComponent(location)}`;
+      let query = `q=${location}`;
 
       if (location.includes(',')) {
         const [a, b] = location.split(',').map(s => s.trim());
@@ -29,16 +29,16 @@ export class WeatherService {
       }
 
       // Fetch weather and forecast in parallel
-      const wReq = this.http.get<any>(`${this.baseUrl}?${query}&unit=${unit}`).toPromise();
-      const fReq = this.http.get<any>(`${this.baseUrl}/forecast?${query}&unit=${unit}`).toPromise();
+      const wReq = this.http.get<any>(`${this.baseUrl}?query=${encodeURIComponent(query)}&unit=${unit}`).toPromise();
+      const fReq = this.http.get<any>(`${this.baseUrl}/forecast?query=${encodeURIComponent(query)}&unit=${unit}`).toPromise();
 
       let [wData, fData] = await Promise.all([wReq, fReq]);
 
       // India fallback logic from original hook
       if (wData.cod === '404' && !location.includes(',')) {
-        const indiaQuery = `q=${encodeURIComponent(location + ',IN')}`;
-        const wReqInd = this.http.get<any>(`${this.baseUrl}?${indiaQuery}&unit=${unit}`).toPromise();
-        const fReqInd = this.http.get<any>(`${this.baseUrl}/forecast?${indiaQuery}&unit=${unit}`).toPromise();
+        const indiaQuery = `q=${location},IN`;
+        const wReqInd = this.http.get<any>(`${this.baseUrl}?query=${encodeURIComponent(indiaQuery)}&unit=${unit}`).toPromise();
+        const fReqInd = this.http.get<any>(`${this.baseUrl}/forecast?query=${encodeURIComponent(indiaQuery)}&unit=${unit}`).toPromise();
         [wData, fData] = await Promise.all([wReqInd, fReqInd]);
       }
 
