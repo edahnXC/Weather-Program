@@ -42,10 +42,10 @@
 }
 
 /* Ensure the typed text is clearly visible and never invisible */
-body[data-theme="light"] .search-input {
+:host-context(body[data-theme="light"]) .search-input {
     color: #0f172a !important; /* Dark Slate: high contrast on light bg */
 }
-body[data-theme="dark"] .search-input {
+:host-context(body[data-theme="dark"]) .search-input {
     color: #ffffff !important; /* Pure White: high contrast on dark bg */
 }
 
@@ -53,10 +53,10 @@ body[data-theme="dark"] .search-input {
 .search-input::placeholder {
     transition: color var(--transition);
 }
-body[data-theme="light"] .search-input::placeholder {
+:host-context(body[data-theme="light"]) .search-input::placeholder {
     color: #64748b !important; /* Slate 500: clearly visible gray */
 }
-body[data-theme="dark"] .search-input::placeholder {
+:host-context(body[data-theme="dark"]) .search-input::placeholder {
     color: #94a3b8 !important; /* Slate 400: clearly visible on dark background */
 }
 
@@ -134,7 +134,7 @@ body[data-theme="dark"] .search-input::placeholder {
 }
 
 /* Dark mode gets its own solid bg */
-body[data-theme="dark"] .suggestions-drop {
+:host-context(body[data-theme="dark"]) .suggestions-drop {
     background: #1e2433;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
 }
